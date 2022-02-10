@@ -2,13 +2,21 @@ let mel_ms;
 let mfcc_ms;
 let margin = 10;
 let pi = 3.14159265359;
+let colors = [];
 
 function setup() {
   createCanvas(1600, 600);
+  frameRate(30);
+
+  // https://sashamaps.net/docs/resources/20-colors/
+  let color_tuples = [[230, 25, 75], [60, 180, 75], [255, 225, 25], [0, 130, 200], [245, 130, 48], [70, 240, 240], [240, 50, 230], [250, 190, 212], [0, 128, 128], [220, 190, 255], [170, 110, 40], [255, 250, 200], [128, 0, 0], [170, 255, 195], [0, 0, 128], [128, 128, 128], [255, 255, 255], [0, 0, 0]]
+  colors = color_tuples.map(t => color(t));
+
   let ms_width = (width - (margin*3)) / 2;
   let ms_height = (height - (margin * 3)) * 0.7;
   mel_ms = new MultiSlider(margin,margin,ms_width,ms_height,0,100,0,false);
   mfcc_ms = new MultiSlider((margin*2) + ms_width,margin,ms_width,ms_height,-80,80,0,true);
+  mfcc_ms.setColors(colors);
 
   let mels = [];
   for(let i = 0; i < 40; i++){
@@ -24,7 +32,6 @@ function setup() {
   mfcc_ms.value(mfccs);
 
   mel_ms.setAction(() => {
-    // print('function called')
     mfcc_ms.value(dct(mel_ms.values,mfcc_ms.values.length));
   })
 
@@ -45,16 +52,15 @@ function draw() {
   background(255);
   mel_ms.display();
   mfcc_ms.display();
+  drawCosines();
 }
 
 function mousePressed(){
-  // print(mouseX,mouseY);
   mel_ms.mousePressed(mouseX,mouseY);
   mfcc_ms.mousePressed(mouseX,mouseY);
 }
 
 function mouseDragged(){
-  // print('mouse dragged:',mouseX,mouseY);
   mel_ms.mouseDragged(mouseX,mouseY);
   mfcc_ms.mouseDragged(mouseX,mouseY);
 }
@@ -101,4 +107,36 @@ function idct(values,n_coeffs){
   }
 
   return out;
+}
+
+function drawCosines(){
+  let barwidth = mel_ms.getBarWidth();
+  let bargap = mel_ms.getBarGap(barwidth);
+  let halfbarwidth = barwidth * 0.5;
+  let barskip = barwidth + bargap;
+  for(let j = 0; j < mfcc_ms.values.length; j++){
+    let amp = mfcc_ms.values[j];
+    let cosPoints = cosinePoints(j,mel_ms.values.length,false);
+    noFill()
+    stroke(colors[j]);
+    strokeWeight(2);
+    beginShape();
+    for(let i = 0; i < cosPoints.length; i++){
+      let y = (mel_ms.y + (mel_ms.h * 0.5)) + (cosPoints[i] * amp * -1);// * -1 inverts because it's a graphics y axis
+      let x = mel_ms.x + bargap + halfbarwidth + (i * barskip);
+      vertex(x,y); 
+    }
+    endShape();
+  }
+}
+
+function cosinePoints(freq,nPoints,inv){
+  let array = [];
+  for(let i = 0; i < nPoints; i++){
+    let x = (((2 * i) + 1) * pi) / (2 * nPoints);
+    let y = cos(x * freq);
+    if(inv) y *= -1;
+    array[i] = y;
+  }
+  return array;
 }

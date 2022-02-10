@@ -11,14 +11,19 @@ class MultiSlider {
     this.max = max;
     this.values = [0];
     this.action = null;
+    this.colors = null;
+  }
+
+  setColors(colors){
+    this.colors = colors;
   }
 
   getBarWidth(){
     return this.w / (this.values.length * 2);
   }
 
-  getBarGap(bar_width){
-    return (this.w - (this.values.length * bar_width)) / (this.values.length+1);
+  getBarGap(barwidth){
+    return (this.w - (this.values.length * barwidth)) / (this.values.length+1);
   }
   
   display(){
@@ -35,12 +40,17 @@ class MultiSlider {
       let barx = bar_gap + (bar_skip*i);
       let bary = map(this.reference,this.min,this.max,this.h,0);
       let bartop = map(this.values[i],this.min,this.max,this.h,0);
-      // TODO: constrain bartop to within window.
-      fill(0);
+      bartop = constrain(bartop,0,this.h);
+      // print('bartop',bartop)
+      if(this.colors != null){
+        fill(this.colors[i])
+      } else {
+        fill(0);
+      }
       rectMode(CORNERS);
       rect(this.x + barx,this.y + bary, this.x + barx + bar_width, this.y + bartop);
       if(this.showNumbers){
-        fill(255);
+        fill(0);
         textAlign(CENTER);
         text(round(this.values[i],2),this.x + barx, (this.y + bary) - 15, bar_width);
       }

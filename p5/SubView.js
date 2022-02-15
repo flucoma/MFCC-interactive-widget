@@ -23,4 +23,20 @@ class SubView {
         // to be overridden
         // print('mouse dragged in SubView',x,y)
     }
+
+    get right(){
+        return this.x + this.width
+    }
+
+    get left() {
+        return this.x
+    }
+
+    get top() {
+        return this.y
+    }
+
+    get bottom() {
+        return this.y + this.h
+    }
 }

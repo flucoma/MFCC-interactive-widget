@@ -9,11 +9,13 @@ let waveform;
 let waveform_image;
 let subviews = [];
 let cosines;
+let cos_freq_slider;
+let file_selector;
+let play_button;
 
-function preload(){
-  meldata = loadTable("resources/Harker-DS-TenOboeMultiphonics-M_melbands.csv");
-  waveform_image = loadImage("resources/Harker-DS-TenOboeMultiphonics-M.jpg")
-}
+// function preload(){
+//   loadSoundExample("Olencki-TenTromboneLongTones-M");
+// }
 
 function setup() {
   createCanvas(1400, 600);
@@ -23,10 +25,10 @@ function setup() {
   const color_tuples = [[230, 25, 75], [60, 180, 75], [255, 225, 25], [0, 130, 200], [245, 130, 48], [70, 240, 240], [240, 50, 230], [250, 190, 212], [0, 128, 128], [220, 190, 255], [170, 110, 40], [255, 250, 200], [128, 0, 0], [170, 255, 195], [0, 0, 128], [128, 128, 128], [255, 255, 255], [0, 0, 0]]
   colors = color_tuples.map(t => color(t));
 
-  // MelBands Multislider
   const ms_width = (width - (margin*3)) / 2;
-  const ms_height = (height - (margin * 3)) * 0.7;
-  mel_ms = new MultiSlider(margin,margin,ms_width,ms_height,0,70,0,false);
+  const ms_height = height * 0.6;
+  // MelBands Multislider
+  mel_ms = new MultiSlider(margin,margin * 3,ms_width,ms_height,0,70,0,false);
   mel_ms.title = "Mel-Frequency Spectrogram (40 MelBands)"
 
   subviews.push(mel_ms)
@@ -43,7 +45,7 @@ function setup() {
   })
 
   // MFCCs Multislider
-  mfcc_ms = new MultiSlider((margin*2) + ms_width,margin,ms_width,ms_height,-80,80,0,true);
+  mfcc_ms = new MultiSlider((margin*2) + ms_width,mel_ms.y,ms_width,ms_height,-80,80,0,true);
   mfcc_ms.showIndices = margin * 4;
   mfcc_ms.title = "Mel-Frequency Cepstral Coefficients (13 MFCCs)"
   subviews.push(mfcc_ms)
@@ -69,10 +71,44 @@ function setup() {
     mel_ms.value(idct(longenough,longenough.length).map(dbamp))
   })
 
+  // Cosines
+  cosines = new Cosines(mel_ms.x,mel_ms.y,mel_ms.w,mel_ms.h)
+  subviews.push(cosines)
+
+  // File Selector
+  file_selector = createSelect(false)
+  file_selector.position(margin,mel_ms.bottom+margin)
+  file_selector.style('width','300px')
+  file_selector.option("Harker-DS-TenOboeMultiphonics-M")
+  file_selector.option("Olencki-TenTromboneLongTones-M")
+  file_selector.option("Tremblay-AaS-VoiceQC-B2K-M")
+  file_selector.option("Tremblay-AaS-AcBassGuit-Melo-M")
+  file_selector.changed(() => {
+    loadSoundExample(file_selector.value())
+  })
+
+  // Play Sound Button
+  play_button = createButton("Play")
+  play_button.position(300 + (margin * 2),mel_ms.bottom+margin)
+  play_button.mousePressed(() => {
+    print('is playing',waveform.audio.isPlaying())
+    if(waveform.audio.isPlaying()){
+      waveform.audio.stop();
+      play_button.label = "Play"
+    } else {
+      waveform.audio.play();
+      play_button.label = "Stop"
+    }
+  })
+
+  // Waveform Display
+  let top = mel_ms.bottom+(margin * 4)
+  waveform = new Waveform(margin,top,width - (margin * 2),height - (margin + top))
+  subviews.push(waveform)
+
   // Cosine Shaped MelBands Frequency Slider
-  const cos_freq_slider_y = mel_ms.y + mel_ms.h + margin
-  const cos_freq_slider = createSlider(0.0,mfcc_ms.values.length-1,1,0)
-  cos_freq_slider.position(margin,cos_freq_slider_y)
+  cos_freq_slider = createSlider(0.0,mfcc_ms.values.length-1,1,0)
+  cos_freq_slider.position(400,margin/2)
   cos_freq_slider.style('width','400px')
   cos_freq_slider.input(() => {
     let cospoints = cosinePoints(cos_freq_slider.value(),mel_ms.values.length,false);
@@ -81,24 +117,29 @@ function setup() {
     mel_ms.valueAction(cospoints)
   })
 
-  // Cosines
-  cosines = new Cosines(mel_ms.x,mel_ms.y,mel_ms.w,mel_ms.h)
-  subviews.push(cosines)
-
-  // Waveform Display
-  const wf_y = cos_freq_slider_y + (margin * 3)
-  const wf_h = height - (wf_y + margin)
-  waveform = new Waveform(margin,wf_y,width - (margin * 2), wf_h)
-  waveform.data = meldata;
-  waveform.image = waveform_image;
-  subviews.push(waveform)
+  // load first example 
+  loadSoundExample("Harker-DS-TenOboeMultiphonics-M");
 }
 
 function draw() {
   background(255);
+
+  fill(0);
+  noStroke();
+  text("Create a \"cosine\" shaped Mel-Frequency Spectrum with frequency: " + round(cos_freq_slider.value(),2), margin, margin,width - (margin * 2), margin * 2)
+
   subviews.forEach((view) => {
     view.display();
   })
+}
+
+function loadSoundExample(stem){
+  // print(stem)
+  if(waveform.audio != null) waveform.audio.stop()
+  waveform.data = loadTable("resources/"+stem+"_melbands.csv");;
+  waveform.image = loadImage("resources/"+stem+".png");
+  waveform.audio = loadSound("resources/"+stem+".mp3");
+  // print(waveform.audio)
 }
 
 function mousePressed(){

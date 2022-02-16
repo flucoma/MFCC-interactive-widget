@@ -28,7 +28,7 @@ function setup() {
   const ms_width = (width - (margin*3)) / 2;
   const ms_height = height * 0.6;
   // MelBands Multislider
-  mel_ms = new MultiSlider(margin,margin * 3,ms_width,ms_height,0,70,0,false);
+  mel_ms = new MultiSlider(margin,margin * 3,ms_width,ms_height,0,50,0,false);
   mel_ms.title = "Mel-Frequency Spectrogram (40 MelBands)"
 
   subviews.push(mel_ms)
@@ -60,6 +60,8 @@ function setup() {
 
   mfcc_ms.setAction(() => {
     let longenough = [];
+    // print('sketch : mfcc_ms : setAction : mfcc_ms values',mfcc_ms.values)
+    // print('sketch : mfcc_ms : setAction : lmfcc_ms values size',mfcc_ms.values.length)
     for(let i = 0; i < mel_ms.values.length; i++){
       if(i < mfcc_ms.values.length){
         longenough[i] = mfcc_ms.values[i]
@@ -67,7 +69,8 @@ function setup() {
         longenough[i] = 0;
       } 
     }
-    // print('sketch : mfcc_ms : setAction',longenough)
+    // print('sketch : mfcc_ms : setAction : long enough',longenough)
+    // print('sketch : mfcc_ms : setAction : long enough size',longenough.length)
     mel_ms.value(idct(longenough,longenough.length).map(dbamp))
   })
 
@@ -91,13 +94,13 @@ function setup() {
   play_button = createButton("Play")
   play_button.position(300 + (margin * 2),mel_ms.bottom+margin)
   play_button.mousePressed(() => {
-    print('is playing',waveform.audio.isPlaying())
+    // print('is playing',waveform.audio.isPlaying())
     if(waveform.audio.isPlaying()){
       waveform.audio.stop();
-      play_button.label = "Play"
+      play_button.html("Play")
     } else {
       waveform.audio.play();
-      play_button.label = "Stop"
+      play_button.html("Stop")
     }
   })
 
@@ -109,16 +112,25 @@ function setup() {
   // Cosine Shaped MelBands Frequency Slider
   cos_freq_slider = createSlider(0.0,mfcc_ms.values.length-1,1,0)
   cos_freq_slider.position(400,margin/2)
-  cos_freq_slider.style('width','400px')
+  cos_freq_slider.style('width','290px')
   cos_freq_slider.input(() => {
     let cospoints = cosinePoints(cos_freq_slider.value(),mel_ms.values.length,false);
-    // cospoints = cospoints.map(x => max(x * mel_ms.max * 0.5,epsilon))
-    cospoints = cospoints.map(x => max((x * 0.5) + 0.5,epsilon) * mel_ms.max * 0.5)
+    // cospoints = cospoints.map(x => x * mel_ms.max * 0.25)
+    // cospoints = cospoints.map(x => max((x * 0.5) + 0.5,epsilon) * mel_ms.max * 0.5)
+    cospoints = cospoints.map(x => max(epsilon,((x * 0.5) + 0.5) * 10))
     mel_ms.valueAction(cospoints)
   })
 
   // load first example 
   loadSoundExample("Harker-DS-TenOboeMultiphonics-M");
+  
+  // Test
+  // let test_array = [];
+  // for(let i = 0; i < 40; i++){
+  //   test_array[i] = random(10);
+  // }
+  // print('test array           ',test_array)
+  // print('idct(dct(test_array))',idct(dct(test_array,test_array.length),test_array.length))
 }
 
 function draw() {
@@ -127,19 +139,23 @@ function draw() {
   fill(0);
   noStroke();
   text("Create a \"cosine\" shaped Mel-Frequency Spectrum with frequency: " + round(cos_freq_slider.value(),2), margin, margin,width - (margin * 2), margin * 2)
-
+  
+  const tx = 380
+  text("Click \"Play\" to hear the audio and see the MelBands and MFCCs, or click on the waveform to look at a specific moment",tx,mel_ms.bottom + (margin*1.5),width-(tx + margin),margin*3)
+  
+  text("Draw your own MelBans to see the MFCCs, or adjust the MFCCs to see what general spectral shape they represent",mfcc_ms.left,margin,mfcc_ms.w,margin*3)
+  
   subviews.forEach((view) => {
     view.display();
   })
 }
 
 function loadSoundExample(stem){
-  // print(stem)
   if(waveform.audio != null) waveform.audio.stop()
   waveform.data = loadTable("resources/"+stem+"_melbands.csv");;
   waveform.image = loadImage("resources/"+stem+".png");
   waveform.audio = loadSound("resources/"+stem+".mp3");
-  // print(waveform.audio)
+  play_button.html("Play")
 }
 
 function mousePressed(){
@@ -211,5 +227,5 @@ const ampdb = function(val){
 }
 
 const dbamp = function(val){
-  return 10**(val/20);
+  return Math.pow(10,val/20);
 }

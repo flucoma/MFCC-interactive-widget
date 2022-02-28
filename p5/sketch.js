@@ -172,12 +172,12 @@ function draw() {
 }
 
 function create_cos_spec(){
-  console.log(invert_cos_spec_but.value())
+  // console.log(invert_cos_spec_but.value())
   let cospoints = cosinePoints(cos_freq_slider.value(),mel_ms.values.length,invert_cos_spec);
-  print(cospoints)
+  // print(cospoints)
   
   cospoints = cospoints.map(x => max(epsilon,map(x,-1.0,1.0,0.0,10.0)))
-  print(cospoints)
+  // print(cospoints)
   mel_ms.valueAction(cospoints)
 }
 

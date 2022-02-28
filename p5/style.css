@@ -2,6 +2,16 @@ html, body {
   margin: 0;
   padding: 0;
 }
+
+body {
+  
+}
+
+#sketchHolder {
+  margin: 0 auto;
+  position: relative;
+}
+
 canvas {
   display: block;
 }

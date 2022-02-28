@@ -22,7 +22,8 @@ let show_cosines_but
 // }
 
 function setup() {
-  createCanvas(1400, 600);
+  let cnv = createCanvas(1400, 600);
+  cnv.parent("sketchHolder");
   frameRate(30);
   
   // https://sashamaps.net/docs/resources/20-colors/
@@ -31,6 +32,7 @@ function setup() {
   
   // File Selector
   file_selector = createSelect(false)
+  file_selector.parent("sketchHolder")
   file_selector.position(margin,margin)
   file_selector.style('width','300px')
   file_selector.option("Harker-DS-TenOboeMultiphonics-M")
@@ -43,6 +45,7 @@ function setup() {
 
   // Play Sound Button
   play_button = createButton("Play")
+  play_button.parent("sketchHolder")
   play_button.position(300 + (margin * 2),margin)
   play_button.mousePressed(() => {
     // print('is playing',waveform.audio.isPlaying())
@@ -116,10 +119,12 @@ function setup() {
   cos_freq_slider = createSlider(0.0,mfcc_ms.values.length-1,1,0)
   cos_freq_slider.position(400,waveform.bottom + margin)
   cos_freq_slider.style('width','190px')
+  cos_freq_slider.parent("sketchHolder")
   cos_freq_slider.input(create_cos_spec)
 
   // Invert Cosine Mel-Frequency Spectrum Button
   invert_cos_spec_but = createButton("Not Inverted")
+  invert_cos_spec_but.parent("sketchHolder")
   invert_cos_spec_but.position(cos_freq_slider.position().x + cos_freq_slider.width + margin,waveform.bottom + margin)
   invert_cos_spec_but.mousePressed(() => {
     invert_cos_spec = !invert_cos_spec;
@@ -133,6 +138,7 @@ function setup() {
   
   // Show Cosines
   show_cosines_but = createButton("Show Cosines")
+  show_cosines_but.parent("sketchHolder")
   show_cosines_but.position(1050,margin)
   show_cosines_but.mousePressed(() => {
     show_cosines = !show_cosines

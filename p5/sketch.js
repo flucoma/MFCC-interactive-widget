@@ -64,7 +64,7 @@ function setup() {
     margin,
     waveform.bottom + (margin * 4),
     (width - (margin*3)) / 2,
-    height - (waveform.bottom + margin + margin),
+    height - (waveform.bottom + (margin*5)),
     0,50,0,false);
   mel_ms.title = "Mel-Frequency Spectrogram (40 MelBands)"
 

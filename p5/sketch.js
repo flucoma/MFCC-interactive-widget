@@ -22,7 +22,7 @@ let show_cosines_but
 // }
 
 function setup() {
-  let cnv = createCanvas(1400, 600);
+  let cnv = createCanvas(1280, 500);
   cnv.parent("sketchHolder");
   frameRate(30);
   
@@ -59,7 +59,7 @@ function setup() {
   })
   
   // Waveform Display
-  waveform = new Waveform(margin,margin * 4,width - (margin * 2),height * 0.3)
+  waveform = new Waveform(margin,margin * 4,width - (margin * 2),height * 0.25)
   subviews.push(waveform)
   
   // MelBands Multislider
@@ -117,8 +117,8 @@ function setup() {
   
   // Cosine Shaped MelBands Frequency Slider
   cos_freq_slider = createSlider(0.0,mfcc_ms.values.length-1,1,0)
-  cos_freq_slider.position(400,waveform.bottom + margin)
-  cos_freq_slider.style('width','190px')
+  cos_freq_slider.position(396,waveform.bottom + margin)
+  cos_freq_slider.style('width', mel_ms.w - (cos_freq_slider.position().x + 90) + 'px')
   cos_freq_slider.parent("sketchHolder")
   cos_freq_slider.input(create_cos_spec)
 
@@ -139,7 +139,7 @@ function setup() {
   // Show Cosines
   show_cosines_but = createButton("Show Cosines")
   show_cosines_but.parent("sketchHolder")
-  show_cosines_but.position(1050,margin)
+  show_cosines_but.position(waveform.right-100,margin)
   show_cosines_but.mousePressed(() => {
     show_cosines = !show_cosines
     if(show_cosines){

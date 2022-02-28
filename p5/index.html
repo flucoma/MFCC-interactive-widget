@@ -10,20 +10,8 @@
     
     <h1>Exploring Mel-Frequency Cepstral Coefficients</h1>
     
-    <p>MFCC stands for Mel-Frequency Cepstral Coefficients ("cepstral" is pronounced like "kepstral"). This analysis returns a set of values (called "coefficients") that are often used for timbral description and timbral comparison. When using MFCCs, one is usually not concerned with the value of a specific coefficient, but rather considers them as a collection that, when considered together, can represent differences and similarities between timbres. The interactive charts below can help you build some intuition about these values.</p>
+    <p>MFCC stands for Mel-Frequency Cepstral Coefficients ("cepstral" is pronounced like "kepstral"). This analysis returns a set of values (called "coefficients") that are often used for timbral description and timbral comparison. When using MFCCs, one is usually not concerned with the value of a specific coefficient, but rather considers them as a collection that, when considered together, can represent differences and similarities between timbres. The interactive charts below can help you build some intuition about these values. Use the "Step" buttons below to help you navigate.</p>
     
-    <p>First, click the "Play" button to hear some sound. The bar chart on the bottom left shows the real-time Mel-Frequency Spectrogram as analyzed by FluCoMa's <a href="https://learn.flucoma.org/reference/melbands/">MelBands</a> object. The 13 MFCC values seen at the bottom right are computed by using the Mel-Frequency Spectrogram as input to the discrete cosine transform (this is how FluCoMa's <a href="https://learn.flucoma.org/reference/mfcc/">MFCC</a> object is calculated). This means that the shape of that Mel-Frequency Spectrogram is compared to a number of cosine wave shapes. Each MFCC value represents how similar the Mel-Frequency Spectrogram is to one of these cosine shapes.</p>
-
-    <p>Stop the sound and drag the slider to create a "fake" Mel-Frequency Spectrogram that is in the shape of an <i>actual</i> cosine wave. We can see that if a spectrum <i>were</i> to be shaped exactly like a cosine wave, the MFCC with the largest magnitude would correspond to the frequency of that cosine wave. Set the slider as close to 8 as you can. MFCC 8 should be much taller than the rest of the MFCCs, indicating that the Mel-Frequency Spectrum shape is most similar to a cosine wave with a frequency of 8. Click the button that says "Not Inverted" to invert this cosine wave. Now our "cosine-shaped" spectrum still has a frequency of 8, but because it is inverted, MFCC 8 is a large <i>negative</i> value. Of course most of the Mel-Frequency Spectrograms that exist naturally won't be as similarly shaped to cosine waves, but now we know why some MFCCs are larger than others: the Mel-Frequency Spectrogram shape of the sound is <i>more similar</i> to a cosine wave shape at that frequency. If the MFCC is negative, it just means that the cosine wave that it is similar to is inverted.</p>
-    
-    <p>In order to see the cosine shapes that the Mel-Frequency Spectrogram is being compared to, click the "Show Cosines" button at the top right. Now you can visually compare the Mel-Frequency Spectrogram to the cosine shape yourself. Click on the Mel-Frequency Spectrogram to draw in your own spectrogram shape. Notice how the MFCC magnitudes and the amplitude of the cosine waves respond to the different shapes of MelBands. Click on the MFCC bar chart at the bottom right to manually adjust the MFCC values. Notice how different MFCCs represent different Mel-Frequency Spectrogram shapes.</p>
-    
-    <p>You may find that when you adjust an MFCC value, a lot of the MelBands change and the resulting spectrogram looks like a "smoothed out" version of what was there before your adjustment. This is because the 13 MFCCs are a "lower resolution" representation of the MelBands. Each time you adjust an MFCC value, the "lower resolution" Mel-Frequency Spectrogram represented by the 13 MFCCs is computed and dislayed on the left. If we were to use all 40 MFCCs, the original Mel-Frequency Spectrogram could be computed, however this is not how MFCCs are often used. Usually a subset of the lowest order MFCCs are used for timbral comparison because the "lower resolution" representation describes the "general contour" of a sound's Mel-Frequency Spectrum.</p>
-    
-    <p>Most of the MFCC values (other than MFCC 0) are unchanged by differences in the overall energy of the spectrum (which relates to how we perceive loudness). This means that timbres that are the same will have the same MFCC values even if they're analysed at different loudnesses. Because a cosine wave with a frequency of 0 is just a flat line, the 0th MFCC represents the spectrum's comparison to that flat line. This means that the magnitude of MFCC 0 just corresponds to how "tall" or "short" the Mel-Frequency Spectrogram is, or, the overall energy in the spectrum. Notice how adjusting the red MFCC 0 bar on the right doesn't change the contour of the Mel-Frequency Spectrogram, only the overall energy.</p>
-              
-    </body>
-      
     <div id="sketchHolder">
       <script src="SubView.js"></script>
       <script src="Cosines.js"></script>
@@ -31,5 +19,45 @@
       <script src="MultiSlider.js"></script>
       <script src="sketch.js"></script>
     </div>
+    
+    <div class="w3-bar w3-black">
+    <button class="w3-bar-item w3-button" onclick="openCity('Step 1')">Step 1</button>
+    <button class="w3-bar-item w3-button" onclick="openCity('Step 2')">Step 2</button>
+    <button class="w3-bar-item w3-button" onclick="openCity('Step 3')">Step 3</button>
+    <button class="w3-bar-item w3-button" onclick="openCity('Step 4')">Step 4</button>
+    <button class="w3-bar-item w3-button" onclick="openCity('Step 5')">Step 5</button>
+    </div>
 
+    <div id="Step 1" class="w3-container city">
+      <p>First, click the "Play" button to hear some sound. The bar chart on the bottom left shows the real-time Mel-Frequency Spectrogram as analyzed by FluCoMa's <a href="https://learn.flucoma.org/reference/melbands/">MelBands</a> object. The 13 MFCC values seen at the bottom right are computed by using the Mel-Frequency Spectrogram as input to the discrete cosine transform (this is how FluCoMa's <a href="https://learn.flucoma.org/reference/mfcc/">MFCC</a> object is calculated). This means that the shape of that Mel-Frequency Spectrogram is compared to a number of cosine wave shapes. Each MFCC value represents how similar the Mel-Frequency Spectrogram is to one of these cosine shapes.</p>
+    </div>
+
+    <div id="Step 2" class="w3-container city" style="display:none">
+      <p>Stop the sound and drag the slider to create a "fake" Mel-Frequency Spectrogram that is in the shape of an <i>actual</i> cosine wave. We can see that if a spectrum <i>were</i> to be shaped exactly like a cosine wave, the MFCC with the largest magnitude would correspond to the frequency of that cosine wave. Set the slider as close to 8 as you can. MFCC 8 should be much taller than the rest of the MFCCs, indicating that the Mel-Frequency Spectrum shape is most similar to a cosine wave with a frequency of 8. Click the button that says "Not Inverted" to invert this cosine wave. Now our "cosine-shaped" spectrum still has a frequency of 8, but because it is inverted, MFCC 8 is a large <i>negative</i> value. Of course most of the Mel-Frequency Spectrograms that exist naturally won't be as similarly shaped to cosine waves, but now we know why some MFCCs are larger than others: the Mel-Frequency Spectrogram shape of the sound is <i>more similar</i> to a cosine wave shape at that frequency. If the MFCC is negative, it just means that the cosine wave that it is similar to is inverted.</p> 
+    </div>
+
+    <div id="Step 3" class="w3-container city" style="display:none">
+      <p>In order to see the cosine shapes that the Mel-Frequency Spectrogram is being compared to, click the "Show Cosines" button at the top right. Now you can visually compare the Mel-Frequency Spectrogram to the cosine shape yourself. Click on the Mel-Frequency Spectrogram to draw in your own spectrogram shape. Notice how the MFCC magnitudes and the amplitude of the cosine waves respond to the different shapes of MelBands. Click on the MFCC bar chart at the bottom right to manually adjust the MFCC values. Notice how different MFCCs represent different Mel-Frequency Spectrogram shapes.</p>
+    </div>
+    
+    <div id="Step 4" class="w3-container city" style="display:none">  
+      <p>You may find that when you adjust an MFCC value, a lot of the MelBands change and the resulting spectrogram looks like a "smoothed out" version of what was there before your adjustment. This is because the 13 MFCCs are a "lower resolution" representation of the MelBands. Each time you adjust an MFCC value, the "lower resolution" Mel-Frequency Spectrogram represented by the 13 MFCCs is computed and dislayed on the left. If we were to use all 40 MFCCs, the original Mel-Frequency Spectrogram could be computed, however this is not how MFCCs are often used. Usually a subset of the lowest order MFCCs are used for timbral comparison (as we are here) because the "lower resolution" representation describes the "general contour" of a sound's Mel-Frequency Spectrum.</p>
+    </div>
+    
+    <div id="Step 5" class="w3-container city" style="display:none">
+      <p>Most of the MFCC values (other than MFCC 0) are unchanged by differences in the overall energy of the spectrum (which relates to how we perceive loudness). This means that timbres that are the same will have the same MFCC values even if they're analysed at different loudnesses. Because a cosine wave with a frequency of 0 is just a flat line, the 0th MFCC represents the spectrum's comparison to that flat line. This means that the magnitude of MFCC 0 just corresponds to how "tall" or "short" the Mel-Frequency Spectrogram is, or, the overall energy in the spectrum. Notice how adjusting the red MFCC 0 bar on the right doesn't change the contour of the Mel-Frequency Spectrogram, only the overall energy.</p>
+    </div>
+    
+    <script>
+    function openCity(cityName) {
+      var i;
+      var x = document.getElementsByClassName("city");
+      for (i = 0; i < x.length; i++) {
+        x[i].style.display = "none";  
+      }
+      document.getElementById(cityName).style.display = "block";  
+    }
+    </script>
+              
+    </body>
 </html>

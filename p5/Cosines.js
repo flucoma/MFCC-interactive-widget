@@ -27,7 +27,7 @@ class Cosines extends SubView {
             cosPoints.forEach((value,index) => {
                 const y = (this.y + (this.h * 0.5)) + (value * amp * -1 * 2);// * -1 inverts because it's a graphics y axis
                 const x = this.x + bargap + halfbarwidth + (index * barskip);
-                vertex(x,y);
+                if(this.containsMouse(x,y)) vertex(x,y);
             })
             endShape();
         }

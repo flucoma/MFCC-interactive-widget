@@ -123,14 +123,6 @@ function setup() {
 
   // load first example 
   loadSoundExample("Harker-DS-TenOboeMultiphonics-M");
-  
-  // Test
-  // let test_array = [];
-  // for(let i = 0; i < 40; i++){
-  //   test_array[i] = random(10);
-  // }
-  // print('test array           ',test_array)
-  // print('idct(dct(test_array))',idct(dct(test_array,test_array.length),test_array.length))
 }
 
 function draw() {

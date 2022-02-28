@@ -30,6 +30,7 @@ class Waveform extends SubView {
       noFill();
       rectMode(CORNER);
       rect(0,0,this.w,this.h);
+      pop();
     }
 
     mousePressed(x,y){

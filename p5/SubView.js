@@ -25,7 +25,7 @@ class SubView {
     }
 
     get right(){
-        return this.x + this.width
+        return this.x + this.w
     }
 
     get left() {

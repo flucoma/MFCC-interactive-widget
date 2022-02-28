@@ -27,7 +27,7 @@ class MultiSlider extends SubView {
   }
   
   display(){
-    push()
+    push();
     translate(this.x,this.y)
     fill(152);
     noStroke();

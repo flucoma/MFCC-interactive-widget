@@ -13,8 +13,8 @@ body {
 }
 
 #sketchHolder {
-  margin: 0 auto;
   position: relative;
+  width: 100px
 }
 
 canvas {
@@ -24,8 +24,8 @@ canvas {
 .main {
   display: flex;
   flex-direction: column;
-  max-width: 80%;
   margin: 0 auto;
+  width: 1280px;
 }
 
 a {
@@ -36,4 +36,8 @@ a {
 a:hover {
 	color: white;
 	background: var(--med-blue);
+}
+
+button {
+  min-width: max-content;
 }
